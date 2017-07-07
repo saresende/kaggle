@@ -5,13 +5,11 @@ var methodOverride = require("method-override")
 var app = express();
 var port = 3000;
 
-// Serve static content for the app from the "public" directory in the application directory.
+
 app.use(express.static("public"));
 
-// Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Override with POST having ?_method=DELETE
 app.use(methodOverride("_method"));
 var exphbs = require("express-handlebars");
 
@@ -36,7 +34,7 @@ connection.connect(function(err) {
 });
 
 app.get('/', function(req, res) {
-	connection.query('SELECT * FROM snl.season;', function (err, data) {
+	connection.query('SELECT * FROM `episode` JOIN `season` WHERE `episode`.`host` LIKE ?? AND `episode`.`sId` = `season`.`sid` ORDER BY `episode`.`sId`;', function (err, data) {
 	if (err) {
 		throw err;
 	}
@@ -44,4 +42,25 @@ app.get('/', function(req, res) {
 	res.render('index', {season: data});	
 	})
 	
+});
+
+app.delete("/:host", function(req, res) {
+  connection.query("DELETE FROM quotes WHERE host = ?", [req.params.id], function(err, result) {
+    if (err) {
+      throw err;
+    }
+    res.redirect("/");
+  });
+});
+
+app.put("/:host", function(req, res) {
+  connection.query("UPDATE `episode` SET sId = ??, eId = ?? WHERE host = ??", [
+    req.body.sid, req.body.eid, req.params.host
+  ], function(err, result) {
+    if (err) {
+      throw err;
+    }
+
+    res.redirect("/");
+  });
 });
