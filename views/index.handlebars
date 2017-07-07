@@ -1,0 +1,32 @@
+<h1>EVERYTHING SNL YOU LOVE I LOVE IT HE LOVES IT </h1>
+
+<p>HAHAHAHAHA SNL IS SO FUNNY</p>
+
+<!-- Pass in data from server.js -->
+
+<ul>
+  {{#each episode}}
+  	<li>
+  		<p><span class="label">Season #:</span> {{this.sId}}</p>
+      <p><span class="label">Episode #:</span> {{this.eId}}</p>
+      <p><span class="label">Year:</span> {{this.year}}</p>
+
+      <form action="/{{this.host}}?_method=DELETE" method="POST">
+        <input type="hidden" name="host" value="{{this.host}}">
+        <button type="submit">Delete</button>
+      </form>
+
+      <a href="/{{this.host}}">Update this data</a>
+  	</li>
+  {{/each}}
+</ul>
+
+<form class="create-update-form">
+
+  <div class="form-group">
+    <label for="auth">Enter a host name:</label>
+    <input type="text" id="host" name="host" value="{{this.host}}">
+  </div>
+
+  <button type="search">Search</button>
+</form>
